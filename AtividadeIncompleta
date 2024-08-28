@@ -1,0 +1,76 @@
+//Eu fiquei bastante tempo quebrando a cabeça e não cheguei numa conclusão pois eu nem mesmo entendi como era pra ser feito e explicado, eu tentei pedir ao chatgpt pra me explicar
+mas nem assim eu consegui entender. Irei colar o codigo do chat abaixo mas esse exercicio não foi feito por mim ja que eu não consegui resolve-lo então ele pode ser completamente 
+tirado de consideração pois nem ao menos explicar eu consegui.
+
+// codigo do chat abaixo
+
+algoritmo "CaminhoMaisCurtoNoLabirinto"
+
+// Função para verificar se uma posição está dentro dos limites da matriz e é um caminho livre
+funcao valido(x: inteiro, y: inteiro, matriz: vetor[vetor[inteiro]], visitado: vetor[vetor[booleano]]) : booleano
+    retorne x >= 0 e x < comprimento(matriz) e y >= 0 e y < comprimento(matriz[0]) e matriz[x][y] = 0 e nao visitado[x][y]
+fimfuncao
+
+// Função para encontrar o comprimento do caminho mais curto usando BFS
+funcao caminhoMaisCurto(matriz: vetor[vetor[inteiro]]) : inteiro
+    // Definir as dimensões da matriz
+    n <- comprimento(matriz)
+    m <- comprimento(matriz[0])
+    
+    // Verificar se a entrada ou a saída são obstáculos
+    se matriz[0][0] = 1 ou matriz[n - 1][m - 1] = 1 então
+        retorne -1
+    fimse
+
+    // Inicializar a fila para BFS
+    fila <- fila[vetor[inteiro]]()
+    fila.inserir([0, 0, 0])  // [x, y, comprimento]
+    
+    // Inicializar a matriz de visitados
+    visitado <- matriz[vetor[booleano]](n, vetor[booleano](m))
+    
+    // Movimentos permitidos: direita, esquerda, baixo, cima
+    movimentos <- [[0, 1], [0, -1], [1, 0], [-1, 0]]
+
+    enquanto fila.nao_vazia() faça
+        posicao <- fila.remover()  // [x, y, comprimento]
+        x <- posicao[1]
+        y <- posicao[2]
+        comprimento <- posicao[3]
+        
+        // Verificar se chegou ao destino
+        se x = n - 1 e y = m - 1 então
+            retorne comprimento
+        fimse
+
+        // Marcar a posição como visitada
+        visitado[x][y] <- verdadeiro
+        
+        // Explorar os vizinhos
+        para movimento em movimentos faça
+            novoX <- x + movimento[1]
+            novoY <- y + movimento[2]
+            
+            se valido(novoX, novoY, matriz, visitado) então
+                fila.inserir([novoX, novoY, comprimento + 1])
+                visitado[novoX][novoY] <- verdadeiro
+            fimse
+        fimpara
+    fimenquanto
+    
+    retorne -1  // Se não houver caminho
+fimfuncao
+
+// Bloco principal
+inicio
+    // Exemplo de labirinto: 0 = caminho livre, 1 = obstáculo
+    labirinto <- [
+        [0, 1, 0, 0],
+        [0, 1, 0, 1],
+        0, 0, 0, 0],
+        [1, 1, 1, 0]
+    ]
+    
+    comprimento <- caminhoMaisCurto(labirinto)
+    escreva("Comprimento do caminho mais curto: ", comprimento, "\n")
+fim
